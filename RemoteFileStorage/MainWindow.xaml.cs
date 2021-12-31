@@ -16,7 +16,8 @@ namespace RemoteFileStorage
     public partial class MainWindow : Window
     {
         private readonly ItemsViewModel itemsViewModel;
-        private readonly string DEFAULT_IMAGE = "/Assets/noimage.png";
+        private const string DEFAULT_IMAGE = "/Assets/noimage.png";
+        private const string FILTER_EXTENSIONS = "Image Files(*.JPEG;*.TIFF;*.PNG;*.SVG;*.GIF)|*.jpeg;*.tiff;*.png;*.svg;*.gif";
 
         public MainWindow()
         {
@@ -48,7 +49,7 @@ namespace RemoteFileStorage
         {
             var openFileDialog = new OpenFileDialog
             {
-                Filter = "Image Files(*.JPEG;*.TIFF;*.PNG;*.SVG;*.GIF)|*.JPEG;*.TIFF;*.PNG;*.SVG;*.GIF"
+                Filter = FILTER_EXTENSIONS
             };
             if (openFileDialog.ShowDialog() == true)
             {
@@ -78,8 +79,9 @@ namespace RemoteFileStorage
             var saveFileDialog = new SaveFileDialog()
             {
                 FileName = blobItem.Name.Contains(ItemsViewModel.ForwardSlash) 
-                ? blobItem.Name.Substring(blobItem.Name.LastIndexOf(ItemsViewModel.ForwardSlash) + 1) 
-                : blobItem.Name
+                ? blobItem.Name.Substring(blobItem.Name.LastIndexOf(ItemsViewModel.ForwardSlash) + 1)
+                : blobItem.Name.Substring(0, blobItem.Name.LastIndexOf('.')),
+                Filter = $"Image Files|*.{blobItem.Name.Substring(blobItem.Name.LastIndexOf('.') + 1)}"
             };
 
             if (saveFileDialog.ShowDialog() == true)
